@@ -12,9 +12,14 @@ function App() {
 
   useEffect(() => {
     fetch("http://localhost:8080/posts")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("게시글 조회 실패");
+        }
+        return response.json();
+      })
       .then((data: Post[]) => setPosts(data))
-      .catch((error) => console.error(error));
+      .catch(console.error);
   }, []);
 
   return (

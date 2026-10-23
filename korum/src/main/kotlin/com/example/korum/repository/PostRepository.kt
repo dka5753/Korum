@@ -35,4 +35,8 @@ class PostRepository {
         // posts[index] = updatedPost
         // return updatePost
     }
+
+    fun deleteById(id: Long): Boolean {
+        return posts.removeIf {it.id == id}
+    }
 }

@@ -16,4 +16,6 @@ class BoardService (private val postRepository: PostRepository )  {
     fun createPost(post: Post): Post = postRepository.save(post)
 
     fun updatePost(id: Long, title: String): Post? = postRepository.update(id, title)
+
+    fun deletePost(id: Long):Boolean =postRepository.deleteById(id)
 }

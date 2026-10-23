@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import com.example.korum.model.UpdatedPostRequest
 import com.example.korum.service.BoardService
 import com.example.korum.model.Post
@@ -21,7 +22,7 @@ class PostController(private val boardService: BoardService)
     fun getPosts(): List<Post> = boardService.getAllPost()
 
     @GetMapping("/{id}")
-    fun getByIds(@PathVariable id: Long): Post? = boardService.getPostById(id)
+    fun getPostByIds(@PathVariable id: Long): Post? = boardService.getPostById(id)
 
     @PostMapping
     fun createPost(@RequestBody post: Post): Post = boardService.createPost(post)
@@ -31,4 +32,9 @@ class PostController(private val boardService: BoardService)
         @PathVariable id: Long,
         @RequestBody request: UpdatedPostRequest
     ): Post? = boardService.updatePost(id, request.title)
+
+    @DeleteMapping("/{id}")
+    fun deletePost(
+        @PathVariable id: Long,
+    ): Boolean = boardService.deletePost(id)
 }
