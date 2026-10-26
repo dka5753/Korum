@@ -14,7 +14,9 @@ class PostRepository {
     fun findById(id:Long): Post? = posts.find{it.id == id}
 
     fun save(post:Post):Post {
-        posts.add(post)
+        val nextId = (posts.maxOfOrNull{it.id} ?: 0L) + 1L
+        val savedPosts = post.copy(id = nextId)
+        posts.add(savedPosts)
         return post
     }
 

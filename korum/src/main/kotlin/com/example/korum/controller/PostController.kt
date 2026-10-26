@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import com.example.korum.model.UpdatedPostRequest
 import com.example.korum.service.BoardService
+import com.example.korum.dto.CreatePostRequest
 import com.example.korum.model.Post
+import com.example.korum.dto.PostResponse
+import com.example.korum.dto.toResponse
 
 @CrossOrigin(origins = ["http://localhost:5174"])
 @RestController
@@ -27,7 +31,13 @@ class PostController(private val boardService: BoardService)
 
     @PostMapping
     fun createPost(
-        @RequestBody post: Post): Post = boardService.createPost(post)
+        @RequestBody request: CreatePostRequest): ResponseEntity<PostResponse>{
+        val savedPost = boardService.createPost(request);
+        val createdPost = savedPost.toResponse()
+
+        return ResponseEntity.
+                status(HttpStatus.CREATED).body(createdPost)
+    }
 
     @PutMapping("/{id}")
     fun updatePost(

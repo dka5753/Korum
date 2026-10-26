@@ -1,7 +1,7 @@
 package com.example.korum.dto
 
-data class CreatePost {
+data class CreatePostRequest (
     val title: String,
     val content: String,
     val author: String,
-}
+)
