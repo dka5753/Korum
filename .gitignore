@@ -1,0 +1,31 @@
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.idea/
+*.iml
+.vscode/
+
+# Gradle
+.gradle/
+korum/build/
+!korum/gradle/wrapper/gradle-wrapper.jar
+
+# Node.js and Vite
+korum-frontend/node_modules/
+korum-frontend/dist/
+korum-frontend/.vite/
+
+# Logs and JVM crash reports
+*.log
+hs_err_pid*
+
+# Local database and container overrides
+docker-compose.override.yml
+compose.override.yaml

@@ -1,0 +1,17 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: korum-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: korum
+      MARIADB_USER: korum_user
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - korum_data:/var/lib/mysql
+
+volumes:
+  korum_data:
