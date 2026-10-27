@@ -1,11 +1,11 @@
 package com.example.korum.service
 
 import com.example.korum.dto.CreatePostRequest
-import com.example.korum.dto.PostResponse
 import org.springframework.stereotype.Service
 import com.example.korum.model.Post
 import com.example.korum.repository.PostRepository
 import com.example.korum.exception.PostNotFoundException
+import jakarta.transaction.Transactional
 
 @Service
 class BoardService (private val postRepository: PostRepository )  {
@@ -14,24 +14,26 @@ class BoardService (private val postRepository: PostRepository )  {
 
     fun getAllPost () : List<Post>  = postRepository.findAll()
 
-    fun getPostById(id: Long): Post = postRepository.findById(id) ?: throw PostNotFoundException(id)
+    fun getPostById(id: Long): Post = postRepository.findById(id).orElseThrow{ PostNotFoundException(id) }
     
-    fun createPost(post: CreatePostRequest): Post{
+    fun createPost(request: CreatePostRequest): Post{
         val post = Post(
-            id = 0L,
-            title = post.title,
-            content = post.content,
-            author = post.author,
+            title = request.title,
+            content = request.content,
+            author = request.author,
         )
         return postRepository.save(post)
     }
-
-    fun updatePost(id: Long, title: String): Post = postRepository.update(id, title) ?: throw PostNotFoundException(id)
-
+    @Transactional
+    fun updatePost(id: Long, title: String): Post {
+        val post = getPostById(id)
+        post.title = title
+        return post
+    }
+    @Transactional
     fun deletePost(id: Long) {
-        val deleted = postRepository.deleteById(id)
-        if (!deleted) {
-            throw PostNotFoundException(id)
-        }
+        val post =getPostById(id)
+
+        postRepository.delete(post)
     }
 }

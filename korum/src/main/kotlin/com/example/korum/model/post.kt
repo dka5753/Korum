@@ -1,12 +1,16 @@
 package com.example.korum.model
 
-data class Post(
-    val id:Long,
-    val title: String,
-    val content: String,
-    val author: String,
-)
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 
-data class UpdatedPostRequest (
-    val title: String
+@Entity
+class Post(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id:Long?= null,
+    var title: String,
+    var content: String,
+    var author: String,
 )
