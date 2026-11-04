@@ -2,6 +2,30 @@
 
 이 문서는 Korum에서 진행한 학습용 구현과 관련 커밋을 기록한다. 각 기록은 당시 확인한 동작과 남아 있는 과제를 구분한다. 다음 학습에서도 날짜와 커밋을 추가해 이어간다.
 
+## 2026-11-04 — Spring Security 2일차 진행 상태
+
+**작업 저장:** `wip: BCrypt 및 DB 로그인 실습과 회원가입 작성 상태 저장`
+
+### 완료한 부분
+
+- BCrypt 검증기 등록, 평문 형식 불일치의 401과 해시 적용 후 로그인 성공 비교.
+- User의 password·role, UserRepository, JpaUserDetailsService 작성.
+- 메모리 계정 빈 제거, DB user/admin 계정이 없을 때만 BCrypt 해시로 초기화.
+- 사용자 보고로 DB 계정의 내 정보 응답과 역할별 접근 비교 확인.
+- SignupRequest와 SignupService의 생성자·빈 signup 함수 작성.
+
+### 작성 중인 부분
+
+**SignupService.signup은 아직 빈 함수이며 회원가입 기능은 동작하지 않는다.** 입력 검증·중복 검사·계정 저장·컨트롤러가 남았다. React 세션 로그인·로그아웃 요청과 CSRF 토큰 연결도 아직 구현하지 않았다.
+
+### 환경과 검증
+
+Spring Security 7.1.1의 encode 반환 선언에 맞춰 저장할 해시를 checkNotNull로 확인했다. 작업 저장 전 누락 import를 보완했고 `compileKotlin`이 통과했다. Kotlin daemon 경로의 환경 쓰기 제한 경고 후 daemon 없는 fallback 컴파일로 성공했다. 자동 테스트나 이번 저장 시점의 서버 재실행은 수행하지 않았다.
+
+### 집에서 이어가기
+
+[2일차 과제·힌트](docs/2026-11-04-day2-resume.md)의 A 단계에서 SignupService 본문부터 작성한다. 가이드는 원본 교안의 CSRF 임시 비활성화와 구분하여 보호를 유지하는 추가 연결 경로를 담았다.
+
 ## 2026-11-03 — Spring Security 1일차
 
 **구현 커밋:** `91c6514` — `feat: Spring Security 인증 및 역할별 접근 제어 실습`
