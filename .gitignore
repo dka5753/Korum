@@ -29,3 +29,6 @@ hs_err_pid*
 # Local database and container overrides
 docker-compose.override.yml
 compose.override.yaml
+
+# Kotlin language server local cache
+/korum/kls_database.db*

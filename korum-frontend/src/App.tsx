@@ -38,6 +38,34 @@ function App() {
     const data = await response.json();
     console.log(data);
   }
+  async function getCsrf() {
+      const response = await fetch("http://localhost:8080/csrf", {
+          credentials: "include",
+      });
+      if (!response.ok) {
+          throw new Error('요청 실패');
+      }
+      return response.json();
+  }
+  async function handleSignup() {
+      const csrf = await getCsrf();
+      const response = await fetch(
+          "http://localhost:8080/signup", {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                  "Content-Type": "application/json",
+                  [csrf.headerName]: csrf.token,
+              },
+              body: JSON.stringify({
+                  email: "kim12@example.test",
+                  username: "kimchi",
+                  password: "1234",
+              }),
+          }
+      );
+      console.log("회원가입 상태:", response.status);
+  }
 
 
   return (
@@ -51,6 +79,7 @@ function App() {
           <small>작성자: {post.author}</small>
         </div>
       ))}
+        <button onClick={handleSignup}>회먹고싶은사람 가입</button>
     </div>
   );
 }

@@ -22,6 +22,11 @@ class SecurityConfig {
                         HttpMethod.GET,
                         "/posts",
                         "/posts/**",
+                        "/csrf",
+                    ).permitAll()
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        "/signup",
                     ).permitAll()
                     .requestMatchers(
                         "/admin/**",
