@@ -3,6 +3,7 @@ package com.example.korum.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -33,9 +34,29 @@ class SecurityConfig {
                     ).hasRole("ADMIN")
                     .anyRequest()
                     .authenticated()
-            }.formLogin(Customizer.withDefaults())
-            .httpBasic(Customizer.withDefaults())
+            }.formLogin { form ->
+                form
+                    .loginProcessingUrl("/api/login")
+                    .successHandler { request, response, authentication ->
+                        response.status = HttpStatus.OK.value()
+                    }
+                    .failureHandler { request, response, exception ->
+                        response.status = HttpStatus.UNAUTHORIZED.value()
+                    }
+            }.logout { logout ->
+                logout
+                    .logoutUrl("/api/logout")
+                    .logoutSuccessHandler { request, response, authentication ->
+                        response.status = HttpStatus.OK.value()
+                    }
+            }
+            .httpBasic { basic -> basic.disable() }
             .cors(Customizer.withDefaults())
+            .exceptionHandling { exceptions ->
+                exceptions.authenticationEntryPoint { request, response, exception ->
+                    response.status = HttpStatus.UNAUTHORIZED.value()
+                }
+            }
 
         return http.build()
     }
