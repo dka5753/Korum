@@ -5,6 +5,7 @@ import com.example.korum.exception.PostNotFoundException
 import com.example.korum.model.Post
 import com.example.korum.repository.PostRepository
 import jakarta.transaction.Transactional
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,16 +18,17 @@ class BoardService(
 
     fun getPostById(id: Long): Post = postRepository.findById(id).orElseThrow { PostNotFoundException(id) }
 
-    fun createPost(request: CreatePostRequest): Post {
+    fun createPost(request: CreatePostRequest, author: String): Post {
         val post =
             Post(
                 title = request.title,
                 content = request.content,
-                author = request.author,
+                author = author,
             )
         return postRepository.save(post)
     }
 
+    @PreAuthorize("@postGuard.isAuthor(#id, authentication.name) or hasRole('ADMIN')")
     @Transactional
     fun updatePost(
         id: Long,
@@ -37,6 +39,7 @@ class BoardService(
         return post
     }
 
+    @PreAuthorize("@postGuard.isAuthor(#id, authentication.name) or hasRole('ADMIN')")
     @Transactional
     fun deletePost(id: Long) {
         val post = getPostById(id)

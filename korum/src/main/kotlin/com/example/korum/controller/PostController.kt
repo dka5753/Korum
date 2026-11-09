@@ -8,15 +8,8 @@ import com.example.korum.model.Post
 import com.example.korum.service.BoardService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.security.Principal
 
 @CrossOrigin(origins = ["http://localhost:5173"])
 @RestController
@@ -35,8 +28,9 @@ class PostController(
     @PostMapping
     fun createPost(
         @RequestBody request: CreatePostRequest,
+        principal: Principal
     ): ResponseEntity<PostResponse> {
-        val savedPost = boardService.createPost(request)
+        val savedPost = boardService.createPost(request, principal.name)
         val createdPost = savedPost.toResponse()
 
         return ResponseEntity
