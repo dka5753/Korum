@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.csrf.CsrfException
 
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -44,6 +45,8 @@ class SecurityConfig {
                     }
                     .failureHandler { request, response, exception ->
                         response.status = HttpStatus.UNAUTHORIZED.value()
+                        response.contentType = "application/json;charset=UTF-8"
+                        response.writer.write("""{"error" : "아이디와 비밀번호를 확인해주세요"}""")
                     }
             }.logout { logout ->
                 logout
@@ -57,6 +60,18 @@ class SecurityConfig {
             .exceptionHandling { exceptions ->
                 exceptions.authenticationEntryPoint { request, response, exception ->
                     response.status = HttpStatus.UNAUTHORIZED.value()
+                    response.contentType= "application/json;charset=UTF-8"
+                    response.writer.write("""{"error": "로그인이 필요합니다."}""")
+                }
+                exceptions.accessDeniedHandler { request, response, exception ->
+                    response.status = HttpStatus.FORBIDDEN.value()
+                    response.contentType = "application/json;charset=UTF-8"
+                    val message = if(exception is CsrfException) {
+                        "CSRF 토큰이없습니다"
+                    }else {
+                        "권한이 없습니다"
+                    }
+                    response.writer.write("""{"error": "$message"}""")
                 }
             }
 

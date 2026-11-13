@@ -11,10 +11,10 @@ class GlobalExceptionHandler {
     fun handlePostNotFound(ex: PostNotFoundException): ResponseEntity<String> = ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
 
     @ExceptionHandler(InvalidSignupException::class)
-    fun handleInvalidSignup(ex: InvalidSignupException): ResponseEntity<String> =
-        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    fun handleInvalidSignup(ex: InvalidSignupException): ResponseEntity<Map<String, String>> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("error" to (ex.message ?: "회원가입 입력값을 확인해주세요.")))
 
     @ExceptionHandler(DuplicateUsernameException::class)
-    fun handleDuplicateUsername(ex: DuplicateUsernameException): ResponseEntity<String> =
-        ResponseEntity.status(HttpStatus.CONFLICT).body(ex.message)
+    fun handleDuplicateUsername(ex: DuplicateUsernameException): ResponseEntity<Map<String, String>> =
+        ResponseEntity.status(HttpStatus.CONFLICT).body(mapOf("error" to (ex.message ?: "이미 사용중인 아이디입니다.")))
 }
